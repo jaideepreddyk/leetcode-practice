@@ -4,14 +4,14 @@ import java.util.Scanner;
 public class KokoEatsBananas {
 
     public static int kokoSpeed(int[] piles, int h){
-        int total = totalBananas(piles);
-        int lower = total/h ;
+        long total = totalBananas(piles);
+        int lower = (int)(total/h) ;
         int upper = speedLimit(piles);
         int mid = 0;
         int min = 0;
         while(lower<=upper){
             mid = (upper + lower)/2;
-            int sim_result = simulateSpeed(piles, h, mid);
+            long sim_result = simulateSpeed(piles, h, mid);
             if(sim_result == total){
                 upper = mid - 1;
                 min = mid;
@@ -23,28 +23,35 @@ public class KokoEatsBananas {
         return min;
     }
     
-    public static int simulateSpeed(int[] input, int h, int k){
+    public static long simulateSpeed(int[] input, int h, int k){
         int[] piles = input.clone();
-        int total = 0;
+        long total = 0;
         int i = 0;
         int counter = 0;
         while(counter<h && i<piles.length){
             if(piles[i]>k){
-                piles[i] = piles[i] - k;
-                total += k;
+                total += (piles[i]/k)*k;
+                counter += piles[i]/k;
+                piles[i] = piles[i] % k;
+                if(counter>h){
+                    return 0;
+                }
+                if(piles[i]==0){
+                    i++;
+                }
             }
             else if(piles[i]<=k){
                 total += piles[i];
                 i++;
+                counter ++;
             }
-            counter ++;
         }
         return total;
     }
 
 
-    public static int totalBananas(int[] piles){
-        int sum = 0;
+    public static long totalBananas(int[] piles){
+        long sum = 0;
         for(int i = 0; i<piles.length; i++){
             sum += piles[i];
         }
