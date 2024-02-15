@@ -15,20 +15,18 @@ public class ConstructBinaryTree {
          }
 
     public static int traverseTree(TreeNode root, int[] preorder, int[] inorder, int p, int i){
+        if(p>=preorder.length) return i;
         if(preorder[p]!=inorder[i]){
-            p = p + 1;
-            root.left = new TreeNode(preorder[p]);
-            i = traverseTree(root.left, preorder, inorder, p, i);
+            root = new TreeNode(preorder[p]);
+            i = traverseTree(root.left, preorder, inorder, p+1, i);
         }
         else if(preorder[p]==inorder[i]){
+            root = new TreeNode(preorder[p]);
             return i+1;
         }
         if(root.val == inorder[i]){
             i=i+1;
-            if(inorder[i+1]==preorder[p+i+1]){
-                i = i + 1;
-                root.right = new TreeNode(inorder[i]);
-            }
+            i = traverseTree(root.right, preorder, inorder, p+i, i);
         }
         return i;
     }
