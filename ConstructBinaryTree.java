@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ConstructBinaryTree {
@@ -14,28 +15,25 @@ public class ConstructBinaryTree {
              }
          }
 
-    public static int traverseTree(TreeNode root, int[] preorder, int[] inorder, int p, int i){
-        if(p>=preorder.length) return i;
-        if(preorder[p]!=inorder[i]){
-            root = new TreeNode(preorder[p]);
-            i = traverseTree(root.left, preorder, inorder, p+1, i);
+    public static TreeNode traverseTree(int[] preorder, int[] inorder){
+        TreeNode root = new TreeNode(preorder[0]);
+        if(preorder.length>1){
+            int mid = 0;
+            while(inorder[mid]!=preorder[0]){
+                mid++;
+            }
+            if(mid>0){
+                root.left = traverseTree(Arrays.copyOfRange(preorder, 1, 1+mid), Arrays.copyOfRange(inorder, 0, mid));
+            }
+            if(mid<preorder.length-1){
+            root.right = traverseTree(Arrays.copyOfRange(preorder, mid+1, preorder.length), Arrays.copyOfRange(inorder, mid+1, inorder.length));
+            }
         }
-        else if(preorder[p]==inorder[i]){
-            root = new TreeNode(preorder[p]);
-            return i+1;
-        }
-        if(root.val == inorder[i]){
-            i=i+1;
-            i = traverseTree(root.right, preorder, inorder, p+i, i);
-        }
-        return i;
+        return root;
     }
 
     public static TreeNode constructBinaryTree(int[] preorder, int[] inorder){
-        // assigning root node
-        TreeNode root = new TreeNode(preorder[0]);
-        int new_ind =traverseTree(root, preorder, inorder, 0, 0);
-        new_ind = traverseTree(root, preorder, inorder, new_ind, new_ind);
+        TreeNode root = traverseTree(preorder, inorder);
         return root;
     }
     public static void main(String[] args){
