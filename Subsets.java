@@ -5,18 +5,17 @@ import java.util.Scanner;
 public class Subsets {
     
     public List<List<Integer>> subsetHelper(int[] input, List<List<Integer>> output, int size){
-        for(int i=0; i<size;i++){
-            for(int j=i; j<size; j++){
-                List<Integer> curr = new ArrayList<>();
-                if(i==j){
-                    curr.add(input[i]);
+       //sliding window
+       // window size loop
+       for(int i=1;i<=size;i++){
+            int j = 0;
+            while(j+i<=size){
+                List<Integer> subset = new ArrayList<>();
+                for(int k = 0; k<i; k++){
+                    subset.add(input[k+j]);
                 }
-                else{
-                    for(int k=i; k<=j; k++){
-                        curr.add(input[k]);
-                    }
-                }
-                output.add(curr);
+                j++;
+                output.add(subset);
             }
         }
         return output;
