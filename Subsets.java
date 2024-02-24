@@ -1,29 +1,39 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Subsets {
     
     public List<List<Integer>> subsetHelper(int[] input, List<List<Integer>> output, int size){
-       //sliding window
-       // window size loop
-       for(int i=1;i<=size;i++){
-            int j = 0;
-            while(j+i<=size){
-                List<Integer> subset = new ArrayList<>();
-                for(int k = 0; k<i; k++){
-                    subset.add(input[k+j]);
+       for(int i = 0; i<size; i++){
+            // adding each singleton element here
+            List<Integer> curr = new ArrayList<>();
+            curr.add(input[i]);
+            output.add(curr);
+            // window size intitalize
+            int window = 1;
+            while(window<size-i && i+1<size){
+                for(int j=i+1; j<size; j++){
+                    if(j+window<=size){
+                        curr = new ArrayList<>();
+                        curr.add(input[i]);
+                        for(int k=0;k<window;k++){
+                            curr.add(input[j+k]);
+                        }
+                        output.add(curr);
+                    }
                 }
-                j++;
-                output.add(subset);
+                window++;
             }
-        }
-        return output;
+       }
+       return output;
     }
 
     public List<List<Integer>> subSets(int[] input){
         List<List<Integer>> output = new ArrayList<>();
         int size = input.length;
+        // adding empty list here only
         output.add(new ArrayList<Integer>());
         output = subsetHelper(input, output, size);
         return output;
