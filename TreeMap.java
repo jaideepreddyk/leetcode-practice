@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.plaf.basic.BasicTreeUI.TreeIncrementAction;
+
 public class TreeMap {
     public class TreeNode{
         int key;
@@ -109,47 +114,49 @@ public class TreeMap {
         return null;
     }
 
-    public void remove(int key){
-        TreeNode curr = this.root;
-        TreeNode parent = null; // if parent is null, then it means the root is the node to be removed
-
-        while(curr!=null){
-            if(key<curr.key){
-                parent = curr;
-                curr = curr.left;
-            }
-            else if(key>curr.key){
-                parent = curr;
-                curr = curr.right;
-            }
-            else if(key==curr.key){
-                break;
-            }
+    public TreeNode removeHelper(TreeNode root, int key){
+        if(root==null) return root;
+        //find the damn node first
+        if(key<root.key){
+            root.left = removeHelper(root.left, key);
         }
-        
-        if(curr == null) return; // no node found
-
-        // now remove the node
-        // at this point curr is the node to be removed
-        // to join back, check if parent key is > or < given key
-        if(curr.left == null){
-            curr = curr.right;
-        }
-        else if(curr.right == null){
-            curr = curr.left;
+        else if(key>root.key){
+            root.right = removeHelper(root.right, key);
         }
         else{
-            // here I need to do 2 things
-            //  1) find the replacement node and update the curr node values with that node's. CAN DO THIS
-            //  2) now remove the replacement node from this subtree. While-loop into this and set null when you encounter that maybe
-
-            TreeNode replacement = getMinNode(curr.right);
-            curr.key = replacement.key;
-            curr.val = replacement.val;
-
-            
+            if(root.left==null){
+                return root.right;
+            }
+            else if(root.right==null){
+                return root.left;
+            }
+            else{
+                TreeNode min = getMinNode(root.right);
+                root.key = min.key;
+                root.val = min.val;
+                root.right = removeHelper(root.right, min.key);
+            }
         }
+        return root;
+    }
 
+    public void remove(int key){
+        this.root = removeHelper(this.root, key);
+    }
+
+    public void inorderHelper(TreeNode root, List<Integer> inorder){
+        if(root==null){
+            return;
+        }
+        inorderHelper(root.left, inorder);
+        inorder.add(root.key);
+        inorderHelper(root.right, inorder);
+    }
+
+    public List<Integer> getInorderKeys() {
+        List<Integer> inorder = new ArrayList<>();
+        inorderHelper(this.root, inorder);
+        return inorder;
     }
 
 }
