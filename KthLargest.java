@@ -4,7 +4,7 @@ public class KthLargest {
 
     public class MaxHeap{
         ArrayList<Integer> heap;
-        int capacity = 1;
+        int capacity = 0;
 
         MaxHeap(){
             heap = new ArrayList<>();
@@ -24,8 +24,8 @@ public class KthLargest {
         }
 
         public void insert(int num){
-            heap.add(num);
-            capacity++;
+            this.capacity++;
+            heap.addLast(num);
             siftUp(capacity);
         }
 
@@ -34,8 +34,8 @@ public class KthLargest {
             int parent_val = heap.get(parent(index));
             int curr_val = heap.get(index);
             if(parent_val<curr_val){
-                heap.add(index, parent_val);
-                heap.add(parent(index), curr_val);
+                heap.set(index, parent_val);
+                heap.set(parent(index), curr_val);
                 siftUp(parent(index));
             }
             return;
@@ -67,6 +67,7 @@ public class KthLargest {
         public int getMax(){
             int max = heap.get(1);
             heap.set(1, heap.get(capacity));
+            heap.removeLast();
             this.capacity--;
             siftDown(1);
             return max;
@@ -86,9 +87,13 @@ public class KthLargest {
     public int add(int val) {
         this.myheap.insert(val);
         int kmax = 0;
-        for(int i=1; i<=this.k;i++){
+        int[] reinsert = new int[k];
+        for(int i=0; i<this.k;i++){
             kmax = this.myheap.getMax();
-            this.myheap.insert(kmax);
+            reinsert[i] = kmax;
+        }
+        for(int i : reinsert){
+            this.myheap.insert(i);
         }
         return kmax;
     }
