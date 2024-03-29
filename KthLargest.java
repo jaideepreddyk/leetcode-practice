@@ -3,12 +3,11 @@ import java.util.ArrayList;
 public class KthLargest {
 
     public class MaxHeap{
-        ArrayList<Integer> heap;
+        int[] heap;
         int capacity = 0;
 
         MaxHeap(){
-            heap = new ArrayList<>();
-            heap.add(0);
+            heap = new int[10000];
         }
 
         public int parent(int index){
@@ -25,17 +24,17 @@ public class KthLargest {
 
         public void insert(int num){
             this.capacity++;
-            heap.addLast(num);
+            heap[capacity] = num;
             siftUp(capacity);
         }
 
         public void siftUp(int index){
             if(parent(index)<1) return;
-            int parent_val = heap.get(parent(index));
-            int curr_val = heap.get(index);
+            int parent_val = heap[parent(index)];
+            int curr_val = heap[index];
             if(parent_val<curr_val){
-                heap.set(index, parent_val);
-                heap.set(parent(index), curr_val);
+                heap[index] = parent_val;
+                heap[parent(index)] = curr_val;
                 siftUp(parent(index));
             }
             return;
@@ -45,10 +44,10 @@ public class KthLargest {
             int maxIndex = index;
             int leftIdx = leftChild(index);
             int rightIdx = rightChild(index);
-            if(leftIdx<=this.capacity && heap.get(maxIndex)<heap.get(leftIdx)){
+            if(leftIdx<=this.capacity && heap[maxIndex]<heap[leftIdx]){
                 maxIndex = leftIdx;
             }
-            if(rightIdx<=this.capacity && heap.get(maxIndex)<heap.get(rightIdx)){
+            if(rightIdx<=this.capacity && heap[maxIndex]<heap[rightIdx]){
                 maxIndex = rightIdx;
             }
             if(maxIndex==index){
@@ -56,18 +55,17 @@ public class KthLargest {
             }
             else{
                 //swap elements
-                int temp = heap.get(maxIndex);
-                heap.set(maxIndex, heap.get(index));
-                heap.set(index, temp);
+                int temp = heap[maxIndex];
+                heap[maxIndex]= heap[index];
+                heap[index] = temp;
                 siftDown(maxIndex);
             }
             return;
         }
 
         public int getMax(){
-            int max = heap.get(1);
-            heap.set(1, heap.get(capacity));
-            heap.removeLast();
+            int max = heap[1];
+            heap[1] = heap[capacity];
             this.capacity--;
             siftDown(1);
             return max;
