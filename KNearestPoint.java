@@ -2,13 +2,13 @@ import java.util.Scanner;
 
 public class KNearestPoint {
 
-    public class MaxHeap{
+    public class MinHeap{
         int[][] heap;
         int capacity = 0;
-        MaxHeap(){
+        MinHeap(){
             this.heap = new int[10000][2];
         }
-        MaxHeap(int[][] arr){
+        MinHeap(int[][] arr){
             this.heap = arr;
             this.capacity = arr.length;
             if(arr.length>1){
@@ -46,7 +46,7 @@ public class KNearestPoint {
             int[] origin = {0,0};
             int[] parent_val = heap[parent(index)];
             int[] curr_val = heap[index];
-            if(euclideanDistance(parent_val, origin) < euclideanDistance(curr_val, origin)){
+            if(euclideanDistance(parent_val, origin) > euclideanDistance(curr_val, origin)){
                 heap[index] = parent_val;
                 heap[parent(index)] = curr_val;
                 siftUp(parent(index));
@@ -56,34 +56,34 @@ public class KNearestPoint {
 
         public void siftDown(int index){
             int[] origin = {0,0};
-            int maxIndex = index;
+            int minIndex = index;
             int leftIdx = leftChild(index);
             int rightIdx = rightChild(index);
-            if(leftIdx<this.capacity && euclideanDistance(heap[maxIndex], origin) < euclideanDistance(heap[leftIdx], origin)){
-                maxIndex = leftIdx;
+            if(leftIdx<this.capacity && euclideanDistance(heap[minIndex], origin) > euclideanDistance(heap[leftIdx], origin)){
+                minIndex = leftIdx;
             }
-            if(rightIdx<this.capacity && euclideanDistance(heap[maxIndex], origin) < euclideanDistance(heap[rightIdx], origin)){
-                maxIndex = rightIdx;
+            if(rightIdx<this.capacity && euclideanDistance(heap[minIndex], origin) > euclideanDistance(heap[rightIdx], origin)){
+                minIndex = rightIdx;
             }
-            if(maxIndex==index){
+            if(minIndex==index){
                 return;
             }
             else{
                 //swap elements
-                int[] temp = heap[maxIndex];
-                heap[maxIndex]= heap[index];
+                int[] temp = heap[minIndex];
+                heap[minIndex]= heap[index];
                 heap[index] = temp;
-                siftDown(maxIndex);
+                siftDown(minIndex);
             }
             return;
         }
 
-        public int[] getMax(){
-            int[] max = heap[0];
+        public int[] getMin(){
+            int[] min = heap[0];
             heap[0] = heap[capacity-1];
             this.capacity--;
             siftDown(0);
-            return max;
+            return min;
         }
     }
     
@@ -100,10 +100,10 @@ public class KNearestPoint {
         // Instead of value at index comparison in integers case, the comparison here will be euclidean distance
 
         int[][] solution = new int[k][2];
-        MaxHeap coordinates = new MaxHeap(points);
+        MinHeap coordinates = new MinHeap(points);
         
         for(int i=0; i<k;i++){
-            solution[k] = coordinates.getMax();
+            solution[i] = coordinates.getMin();
         }
 
         return solution;
