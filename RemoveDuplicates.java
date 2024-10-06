@@ -1,6 +1,9 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class RemoveDuplicates {
 
-    public int removeDuplicates (int[] arr){
+    public static int removeDuplicates (int[] arr){
         int placepointer = 0;
 
         // edge case
@@ -21,6 +24,13 @@ public class RemoveDuplicates {
         return placepointer + 1;
     }
     public static void main(String[] args){
-
+        Scanner s = new Scanner(System.in);
+        int arr_size = s.nextInt();
+        int[] arr = new int[arr_size];
+        for(int i = 0; i<arr_size; i++){
+            arr[i] = s.nextInt();
+        }
+        System.out.println(removeDuplicates(arr));
+        System.out.println(Arrays.toString(arr));
     }
 }
